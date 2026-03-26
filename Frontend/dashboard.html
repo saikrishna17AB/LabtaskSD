@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>📁 Project</h2>
+
+        <input type="file" id="imageInput" multiple webkitdirectory>
+        <button onclick="uploadImages()">Upload</button>
+
+        <div id="imageList"></div>
+    </div>
+
+    <!-- Main Area -->
+    <div class="main">
+        <h2 id="imageTitle">No Image Selected</h2>
+
+        <canvas id="canvas"></canvas>
+
+        <div class="controls">
+            <input type="text" id="label" placeholder="Enter label">
+            <button onclick="saveBox()">Save Box</button>
+            <button onclick="downloadCSV()">Download CSV</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
