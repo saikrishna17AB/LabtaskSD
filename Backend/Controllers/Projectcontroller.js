@@ -1,91 +1,113 @@
 const Project = require("../Models/Project");
-const Image = require("../Models/Image");
 
-// Create Project
+// Create project
 exports.createProject = async (req, res) => {
-    const { userId, name } = req.body;
-
     try {
-        const project = new Project({ userId, name });
+        const { name, description } = req.body;
+
+        const project = new Project({ name, description });
         await project.save();
 
-        res.json({ success: true, project });
-
+        res.json(project);
     } catch (err) {
-        res.json({ success: false, error: err.message });
+        res.status(500).json({ error: err.message });
     }
 };
 
-// Upload Images to Project
-exports.uploadImages = async (req, res) => {
-    const { projectId } = req.body;
-
+// Get all projects
+exports.getProjects = async (req, res) => {
     try {
-        const images = [];
+        const projects = await Project.find();
+        res.json(projects);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
-        for (let file of req.files) {
+// Delete project
+exports.deleteProject = async (req, res) => {
+    try {
+        await Project.findByIdAndDelete(req.params.id);
+        res.json({ message: "Deleted" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+
+
+
+const Image = require("../Models/Image");
+
+// Upload images to project
+exports.uploadImages = async (req, res) => {
+    try {
+        const { projectId } = req.body;
+
+        const files = req.files;
+        let images = [];
+
+        for (let file of files) {
             const img = new Image({
-                projectId,
                 name: file.originalname,
+                projectId,
                 data: file.buffer.toString("base64"),
-                type: file.mimetype,
-                boxes: []
+                type: file.mimetype
             });
 
             await img.save();
             images.push(img);
         }
 
-        res.json({ success: true, images });
-
+        res.json({ images });
     } catch (err) {
-        res.json({ success: false, error: err.message });
+        res.status(500).json({ error: err.message });
     }
 };
 
-// Add Bounding Box
-exports.addBox = async (req, res) => {
-    const { imageId, label, x, y, width, height } = req.body;
-
+// Save bounding box
+exports.saveBox = async (req, res) => {
     try {
-        const image = await Image.findById(imageId);
+        const { imageId, box } = req.body;
 
-        image.boxes.push({ label, x, y, width, height });
+        const image = await Image.findById(imageId);
+        image.boxes.push(box);
         await image.save();
 
-        res.json({ success: true });
-
+        res.json({ message: "Saved" });
     } catch (err) {
-        res.json({ success: false });
+        res.status(500).json({ error: err.message });
     }
 };
 
-// Get Images of Project
+// Get images of project
 exports.getProjectImages = async (req, res) => {
-    const { projectId } = req.params;
-
-    const images = await Image.find({ projectId });
+    const images = await Image.find({ projectId: req.params.projectId });
     res.json(images);
 };
 
-// Download CSV
-exports.downloadCSV = async (req, res) => {
+
+
+// Add this to your image controller
+exports.saveAnnotations = async (req, res) => {
     try {
-        const images = await Image.find();
+        const { imageId, boxes } = req.body;
 
-        let csv = "image,label,x,y,width,height\n";
+        // Find the image and update the entire boxes array
+        const updatedImage = await Image.findByIdAndUpdate(
+            imageId,
+            { $set: { boxes: boxes } },
+            { new: true }
+        );
 
-        images.forEach(img => {
-            img.boxes.forEach(box => {
-                csv += `${img.name},${box.label},${box.x},${box.y},${box.width},${box.height}\n`;
-            });
-        });
+        if (!updatedImage) {
+            return res.status(404).json({ error: "Image not found" });
+        }
 
-        res.header("Content-Type", "text/csv");
-        res.attachment("annotations.csv");
-        res.send(csv);
-
+        res.json({ message: "Coordinates saved successfully", data: updatedImage });
     } catch (err) {
-        res.send("Error");
+        console.error(err);
+        res.status(500).json({ error: err.message });
     }
 };

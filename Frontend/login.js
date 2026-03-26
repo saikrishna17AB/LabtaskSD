@@ -41,7 +41,7 @@ async function handleAuth() {
         if (data.success) {
             if (isLogin) {
                 alert("Login successful!");
-                window.location.href = "dashboard.html";
+                window.location.href = "projects.html";
             } else {
                 alert("Registered successfully! Now login.");
                 toggleMode();

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Projects</title>
+    <link rel="stylesheet" href="project.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>LabelBox</h1>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="projects-header">
+            <h2>Projects</h2>
+            <button onclick="openModal()" class="new-project-btn">+ New Project</button>
+        </div>
+
+        <!-- Projects List -->
+        <div id="projectList" class="projects-container">
+            <!-- Project cards will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <!-- Modal for New Project -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Create New Project</h3>
+            <input type="text" id="projectName" placeholder="Project Name">
+            <textarea id="projectDesc" placeholder="Description (optional)"></textarea>
+            <button onclick="createProject()">Create</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="project.js"></script>
+</body>
+</html>

@@ -2,38 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Labeling Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
+    <header>
+        <h1 id="imageTitle">Select an Image</h1>
+        <button onclick="window.location.href='projects.html'">Back to Projects</button>
+    </header>
 
-<div class="container">
+    <div style="display: flex;">
+        <aside style="width: 200px; background: #1e293b; padding: 10px;">
+            <input type="file" id="imageInput" webkitdirectory directory multiple>
+            <button onclick="uploadImages()">Upload Directory</button>
+            <div id="imageList"></div>
+        </aside>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>📁 Project</h2>
-
-        <input type="file" id="imageInput" multiple webkitdirectory>
-        <button onclick="uploadImages()">Upload</button>
-
-        <div id="imageList"></div>
+        <main style="flex-grow: 1; text-align: center;">
+            <input type="text" id="label" placeholder="Enter label name (e.g. Car)">
+            <br><br>
+            <canvas id="canvas" style="border: 2px solid #6366f1; cursor: crosshair;"></canvas>
+        </main>
     </div>
 
-    <!-- Main Area -->
-    <div class="main">
-        <h2 id="imageTitle">No Image Selected</h2>
-
-        <canvas id="canvas"></canvas>
-
-        <div class="controls">
-            <input type="text" id="label" placeholder="Enter label">
-            <button onclick="saveBox()">Save Box</button>
-            <button onclick="downloadCSV()">Download CSV</button>
-        </div>
-    </div>
-
+    <div class="toolbar">
+    <input type="text" id="label" placeholder="Label Name">
+    <button onclick="saveImage()" style="background: #10b981;">Save Progress</button>
+    <button onclick="downloadCSV()" style="background: #f59e0b;">Download CSV</button>
 </div>
 
-<script src="dashboard.js"></script>
+    <script src="project.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>
